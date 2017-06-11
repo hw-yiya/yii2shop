@@ -60,17 +60,17 @@ class BrandController extends \yii\web\Controller
         $request = \Yii::$app->request;
         //模型接受表单提交的数据
         if($request->isPost){
-            //表单提交的数据
+            //接受表单提交数据
             $model->load($request->post());
             //$model->imgFile=UploadedFile::getInstance($model,'imgFile');
             //验证数据并保存数据表
             if($model->validate()){
-                //保存图片
+//                //保存图片
 //                $fileName = '/images/brand/'.uniqid().'.'.$model->imgFile->extension;
 //                $model->imgFile->saveAs(\Yii::getAlias('@webroot').$fileName,false);
 //                $model->logo=$fileName;
                 $model->save(false);
-                \Yii::$app->session->setFlash('success','修改成功');
+                \Yii::$app->session->setFlash('success','添加成功');
                 //跳转列表页
                 return $this->redirect(['brand/index']);
             }else{
