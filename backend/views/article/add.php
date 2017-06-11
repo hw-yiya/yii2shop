@@ -2,7 +2,7 @@
 $form = \yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'name')->textInput();
 echo $form->field($model,'intro')->textarea();
-echo $form->field($model,'article_category_id')->dropDownList(\yii\helpers\ArrayHelper::map(\backend\models\ArticleCategory::find()->all(),'id','name'));
+echo $form->field($model,'article_category_id')->dropDownList(\yii\helpers\ArrayHelper::map(\backend\models\ArticleCategory::find()->all(),'id','name'),['prompt'=>'请选择分类']);
 echo $form->field($art,'content')->widget('kucha\ueditor\UEditor',[]);
 echo $form->field($model,'sort')->textInput();
 echo $form->field($model,'status')->radioList([0=>'隐藏',1=>'正常']);

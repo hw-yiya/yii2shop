@@ -51,7 +51,7 @@ class ArticleController extends \yii\web\Controller
             if($model->validate() && $art->validate()){
                 $model->create_time = time();
                 if($model->save()){
-                    $art->article_id=$model->id;
+                    //$art->article_id=$model->id;
                     $art->save(false);
                 }
 
