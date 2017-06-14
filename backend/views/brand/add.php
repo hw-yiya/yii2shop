@@ -45,7 +45,7 @@ if($model->logo){
 }
 
 echo $form->field($model,'sort');
-echo $form->field($model,'status')->radioList([0=>'隐藏',1=>'正常']);
+echo $form->field($model,'status',['inline'=>true])->radioList([0=>'隐藏',1=>'正常']);
 echo $form->field($model,'code')->widget(yii\captcha\Captcha::className(),[
     'template'=>'<div class="row"><div class="col-lg-2">{image}</div><div class="col-lg-4">{input}</div></div>']);
 

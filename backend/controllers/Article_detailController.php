@@ -7,12 +7,13 @@ use backend\models\Articledetail;
 
 class Article_detailController extends \yii\web\Controller
 {
-
+    //列表页
     public function actionIndex()
     {
         $models = Articledetail::find()->all();
         return $this->render('index',['models'=>$models]);
     }
+    //添加
     public function actionAdd(){
         $model = new Articledetail();
         $request = \Yii::$app->request;
@@ -33,6 +34,7 @@ class Article_detailController extends \yii\web\Controller
         }
         return $this->render('add',['model'=>$model]);
     }
+    //修改
     public function actionEdit($id)
     {
         $model = Articledetail::findOne(['id' => $id]);
@@ -55,8 +57,7 @@ class Article_detailController extends \yii\web\Controller
         }
         return $this->render('add',['model'=>$model]);
     }
-
-
+    //删除
     public function actionDel($id){
         $model = Articledetail::findOne(['id'=>$id]);
         $model->delete();
