@@ -31,7 +31,11 @@ class LoginForm extends Model{
 //            if($this->password != $table->password){
             if(\Yii::$app->security->validatePassword($this->password,$table->password)){
                 //账号密码正确登录
-                \Yii::$app->user->login($table);
+                $table -> generateAuthKey();
+                $table->last_time = time();
+                $table->last_ip = \Yii::$app->request->userIP;
+                $table->save(false);
+                \Yii::$app->user->login($table,$this->rememberMe ? 3600 * 24 * 30 : 0);
 
             }else{
                 $this->addError('password','账号或密码不正确');

@@ -24,9 +24,6 @@ class AdminController extends \yii\web\Controller
             //var_dump($model);exit;
             //验证
             if($model->validate()){
-                $model->last_time = time();
-                $model->last_ip = \Yii::$app->request->userIP;
-
                 $model->save(false);
                 //var_dump($model->getErrors());exit;
                 //设置提示信息
@@ -46,9 +43,6 @@ class AdminController extends \yii\web\Controller
             //var_dump($model);exit;
             //验证
             if($model->validate()){
-                $model->last_time = time();
-                $model->last_ip = \Yii::$app->request->userIP;
-
                 $model->save(false);
                 //var_dump($model->getErrors());exit;
                 //设置提示信息
@@ -73,7 +67,7 @@ class AdminController extends \yii\web\Controller
             $model->load($request->post());
             if($model->validate()){
                 \Yii::$app->session->setFlash('success','登录成功');
-                return $this->redirect(['admin/index']);
+                return $this->redirect(['site/index']);
             }
         }
         return $this->render('login',['model'=>$model]);
