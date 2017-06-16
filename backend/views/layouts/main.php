@@ -42,6 +42,8 @@ AppAsset::register($this);
         ['label'=>'商品分类','url'=>['goods_category/index']],
         ['label'=>'商品','url'=>['goods/index']],
         ['label'=>'管理员','url'=>['admin/index']],
+        ['label'=>'角色','url'=>['rbac/role-index']],
+        ['label'=>'权限','url'=>['rbac/permission-index']],
     ];
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => '登陆', 'url' => ['/admin/login']];

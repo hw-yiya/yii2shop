@@ -1,3 +1,4 @@
+<h2>管理员登录</h2>
 <?php
 $form = \yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'username');

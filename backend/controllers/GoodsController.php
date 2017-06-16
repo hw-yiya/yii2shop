@@ -140,65 +140,63 @@ class GoodsController extends \yii\web\Controller
     }
 
     public function actions() {
-        return [
-            's-upload' => [
-                'class' => UploadAction::className(),
-                'basePath' => '@webroot/upload',
-                'baseUrl' => '@web/upload',
-                'enableCsrf' => true, // default
-                'postFieldName' => 'Filedata', // default
-                //BEGIN METHOD
-                //'format' => [$this, 'methodName'],
-                //END METHOD
-                //BEGIN CLOSURE BY-HASH
-                'overwriteIfExist' => true,
+    return [
+        's-upload' => [
+            'class' => UploadAction::className(),
+            'basePath' => '@webroot/upload',
+            'baseUrl' => '@web/upload',
+            'enableCsrf' => true, // default
+            'postFieldName' => 'Filedata', // default
+            //BEGIN METHOD
+            //'format' => [$this, 'methodName'],
+            //END METHOD
+            //BEGIN CLOSURE BY-HASH
+            'overwriteIfExist' => true,
 //                'format' => function (UploadAction $action) {
 //                    $fileext = $action->uploadfile->getExtension();
 //                    $filename = sha1_file($action->uploadfile->tempName);
 //                    return "{$filename}.{$fileext}";
 //                },
-                //END CLOSURE BY-HASH
-                //BEGIN CLOSURE BY TIME
-                'format' => function (UploadAction $action) {
-                    $fileext = $action->uploadfile->getExtension();
-                    $filehash = sha1(uniqid() . time());
-                    $p1 = substr($filehash, 0, 2);
-                    $p2 = substr($filehash, 2, 2);
-                    return "{$p1}/{$p2}/{$filehash}.{$fileext}";
-                },
-                //END CLOSURE BY TIME
-                'validateOptions' => [
-                    'extensions' => ['jpg', 'png'],
-                    'maxSize' => 1 * 1024 * 1024, //file size
-                ],
-                'beforeValidate' => function (UploadAction $action) {
-                    //throw new Exception('test error');
-                },
-                'afterValidate' => function (UploadAction $action) {},
-                'beforeSave' => function (UploadAction $action) {},
-                'afterSave' => function (UploadAction $action) {
-                    $imgUrl = $action->getWebUrl();
-//                    $action->output['fileUrl'] = $action->getWebUrl();
-                    //调用七牛云组件，将图片上传到七牛云
-                    $qiniu = \Yii::$app->qiniu;
-                    $qiniu->uploadFile(\Yii::getAlias('@webroot').$imgUrl,$imgUrl);
-                    //获取该图片在七牛云的地址
-                    $url = $qiniu->getLink($imgUrl);
-                    $action->output['fileUrl'] = $url;
-
-                    //图片上传成功的同时，将图片和商品关联起来
-                    $model = new GoodsPhoto();
-                    $model->goods_id = \Yii::$app->request->post('goods_id');
-                    $model->path = $action->getWebUrl();
-                    $model->save();
-                    $action->output['fileUrl'] = $model->path;
-                },
+            //END CLOSURE BY-HASH
+            //BEGIN CLOSURE BY TIME
+            'format' => function (UploadAction $action) {
+                $fileext = $action->uploadfile->getExtension();
+                $filehash = sha1(uniqid() . time());
+                $p1 = substr($filehash, 0, 2);
+                $p2 = substr($filehash, 2, 2);
+                return "{$p1}/{$p2}/{$filehash}.{$fileext}";
+            },
+            //END CLOSURE BY TIME
+            'validateOptions' => [
+                'extensions' => ['jpg', 'png'],
+                'maxSize' => 1 * 1024 * 1024, //file size
             ],
-            'upload'=>[
-                'class' => 'kucha\ueditor\UEditorAction',
-            ]
-        ];
-    }
+            'beforeValidate' => function (UploadAction $action) {
+                //throw new Exception('test error');
+            },
+            'afterValidate' => function (UploadAction $action) {},
+            'beforeSave' => function (UploadAction $action) {},
+            'afterSave' => function (UploadAction $action) {
+                //调用七牛云组件,将图片上传到七牛云
+                $qiniu = \Yii::$app->qiniu;
+                $qiniu->uploadFile($action->getSavePath(),$action->getWebUrl());
+//                    //获取该图片的在七牛云的地址
+                $url = $qiniu->getLink($action->getWebUrl());
+                $action->output['fileUrl']=$url;
+
+                //图片上传成功的同时，将图片和商品关联起来
+                $model = new GoodsPhoto();
+                $model->goods_id = \Yii::$app->request->post('goods_id');
+                $model->path = $action->getWebUrl();
+                $model->save();
+                $action->output['fileUrl'] = $model->path;
+            },
+        ],
+        'upload'=>[
+            'class' => 'kucha\ueditor\UEditorAction',
+        ]
+    ];
+}
     //根据Id查看商品详情
     public function actionSel($id){
         //根据id显示相关商品的详情
@@ -219,44 +217,5 @@ class GoodsController extends \yii\web\Controller
                 ],
             ],
         ];
-    }
-
-    //添加图片
-    public function actionPhoto($id)
-    {
-        $goodsModels = Goods::findOne($id);
-        $photoModel = new GoodsPhoto();
-        $request = new Request();
-        if ($request->isPost) {
-            $photoModel->load($request->post());
-            if ($photoModel->validate()) {
-                $photoModel->goods_id = $id;
-                $photoModel->save();
-            }
-        }
-        return $this->render('photo',['goodsModels'=>$goodsModels,'photoModel'=>$photoModel]);
-    }
-    public function actionGallery($id)
-    {
-        $goods = Goods::findOne(['id'=>$id]);
-        if($goods == null){
-            throw new NotFoundHttpException('商品不存在');
-        }
-
-
-        return $this->render('gallery',['goods'=>$goods]);
-
-    }
-
-    //删除图片
-    public function actionDpt()
-    {
-        $id = \Yii::$app->request->post('id');
-        $model = GoodsPhoto::findOne(['id'=>$id]);
-        if($model && $model->delete()){
-            return 'success';
-        }else{
-            return 'fail';
-        }
     }
 }

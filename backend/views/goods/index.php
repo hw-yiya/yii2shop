@@ -1,3 +1,4 @@
+<h2>商品列表</h2>
 <?php
 echo \yii\bootstrap\Html::a('添加',['goods/add'],['class'=>'btn btn-info']);
 ?>
@@ -47,7 +48,7 @@ echo \yii\bootstrap\Html::submitButton('搜索',['class'=>'btn btn-info']);
         <td>
             <?php
             echo \yii\bootstrap\Html::a('查看',['goods/sel','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
-            echo \yii\bootstrap\Html::a('添加图片',['goods/photo','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
+            echo \yii\bootstrap\Html::a('添加图片',['goodsimg/img','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
             echo \yii\bootstrap\Html::a('编辑',['goods/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
             echo \yii\bootstrap\Html::a('删除',['goods/del','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
             ?>

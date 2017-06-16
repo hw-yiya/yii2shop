@@ -1,3 +1,4 @@
+<h2>商品添加</h2>
 <?php
 /*
  * @var $this \yii\web\View

@@ -1,3 +1,4 @@
+<h2>添加商品分类</h2>
 <?php
 /*
  * @var $this \yii\web\View

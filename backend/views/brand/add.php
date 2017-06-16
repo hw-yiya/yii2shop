@@ -1,3 +1,4 @@
+<h2>品牌添加</h2>
 <?php
 use yii\web\JsExpression;
 use xj\uploadify\Uploadify;

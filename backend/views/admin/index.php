@@ -1,3 +1,4 @@
+<h2>管理员首页</h2>
 <?php
 echo \yii\bootstrap\Html::a('添加',['admin/add'],['class'=>'btn btn-info']);
 ?>
@@ -17,7 +18,8 @@ echo \yii\bootstrap\Html::a('添加',['admin/add'],['class'=>'btn btn-info']);
         <td>
             <?php
             echo \yii\bootstrap\Html::a('修改',['admin/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
-            echo \yii\bootstrap\Html::a('删除',['admin/del','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
+            echo \yii\bootstrap\Html::a('删除',['admin/del','id'=>$model->id],['class'=>'btn btn-danger btn-xs']);
+            echo \yii\bootstrap\Html::a('授权',['admin/rbac','id'=>$model->id],['class'=>'btn btn-success btn-xs']);
             ?>
         </td>
     </tr>

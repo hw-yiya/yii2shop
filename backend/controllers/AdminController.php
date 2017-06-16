@@ -5,6 +5,7 @@ namespace backend\controllers;
 use backend\models\Admin;
 use backend\models\PasswdForm;
 use backend\models\LoginForm;
+use backend\models\UserForm;
 
 class AdminController extends \yii\web\Controller
 {
@@ -94,5 +95,18 @@ class AdminController extends \yii\web\Controller
     public function actionLogout(){
         \Yii::$app->user->logout();
         return $this->redirect(['admin/login']);
+    }
+    //设置指定权限角色
+    public function actionRbac($id){
+        $model = new UserForm();
+        $name = Admin::findOne($id);
+        $model->loadData($id);
+        if($model->load(\Yii::$app->request->post()) && $model->validate()){
+            if($model->assignRole($id)){
+                \Yii::$app->session->setFlash('success','角色设置成功');
+                return $this->redirect(['index']);
+            }
+        }
+        return $this->render('rbac',['model'=>$model]);
     }
 }

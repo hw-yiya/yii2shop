@@ -38,7 +38,7 @@ class Goods extends \yii\db\ActiveRecord
         return $this->hasOne(Goods_category::className(),['id'=>'goods_category_id']);
     }
     public function getPhotos(){
-        return $this->hasMany(GoodsPhoto::className(),['goods_id'=>'id']);
+        return $this->hasMany(GoodsImg::className(),['goods_id'=>'id']);
     }
     public static function tableName()
     {

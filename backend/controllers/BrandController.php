@@ -118,30 +118,31 @@ class BrandController extends \yii\web\Controller
                 'afterValidate' => function (UploadAction $action) {},
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
-                    $imgUrl = $action->getWebUrl();
-                    $action->output['fileUrl'] = $action->getWebUrl();
+//                    $imgUrl = $action->getWebUrl();
+//                    $action->getSavePath();
+//                    $action->output['fileUrl'] = $action->getWebUrl();
 //                    //调用七牛云组件,将图片上传到七牛云
                     $qiniu = \Yii::$app->qiniu;
-                    $qiniu->uploadFile(\Yii::getAlias('@webroot').$imgUrl,$imgUrl);
+                    $qiniu->uploadFile($action->getSavePath(),$action->getWebUrl());
 //                    //获取该图片的在七牛云的地址
-                    $url = $qiniu->getLink($imgUrl);
+                    $url = $qiniu->getLink($action->getWebUrl());
                     $action->output['fileUrl']=$url;
                 },
             ],
         ];
     }
-//    public function actionTest(){
-//        $ak = 'E1EhuIzWOns2Y1mEMGgG4KJ5wS8CRZyt1nhdG9tz';
-//        $sk = 'FvNQ8tnG07XOQ8SdMZTNxfzuap2kFpDqaBrEyzxv';
-//        $domain = 'http://or9qr3rur.bkt.clouddn.com/';
-//        $bucket = 'yii2shop';
-//        $qiniu = new Qiniu($ak, $sk,$domain, $bucket);
-//        //要上传的文件
-//        $fileName = \Yii::getAlias('@webroot'.'/upload/test.jpg');
-//        $key = 'test.jpg';
-//        $re = $qiniu->uploadFile($fileName,$key);
-//
-//        $url = $qiniu->getLink($key);
-////        var_dump($url);
-//    }
+    public function actionTest(){
+        $ak = 'E1EhuIzWOns2Y1mEMGgG4KJ5wS8CRZyt1nhdG9tz';
+        $sk = 'FvNQ8tnG07XOQ8SdMZTNxfzuap2kFpDqaBrEyzxv';
+        $domain = 'http://or9qr3rur.bkt.clouddn.com/';
+        $bucket = 'yii2shop';
+        $qiniu = new Qiniu($ak, $sk,$domain, $bucket);
+        //要上传的文件
+        $fileName = \Yii::getAlias('@webroot'.'/upload/test.jpg');
+        $key = 'test.jpg';
+        $re = $qiniu->uploadFile($fileName,$key);
+
+        $url = $qiniu->getLink($key);
+//        var_dump($url);
+    }
 }

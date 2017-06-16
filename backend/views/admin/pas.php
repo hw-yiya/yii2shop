@@ -1,3 +1,4 @@
+<h2>管理员修改密码</h2>
 <?php
 $form = \yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'oldPassword')->passwordInput();

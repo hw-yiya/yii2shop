@@ -1,3 +1,4 @@
+<h2>商品分类列表</h2>
 <?php
 echo \yii\bootstrap\Html::a('添加',['goods_category/add'],['class'=>'btn btn-info']);
 ?>

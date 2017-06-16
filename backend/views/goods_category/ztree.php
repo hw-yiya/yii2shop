@@ -1,3 +1,4 @@
+<h2>商品分类页</h2>
 <!DOCTYPE html>
 <HTML>
 <HEAD>

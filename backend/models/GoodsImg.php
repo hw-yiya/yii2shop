@@ -11,7 +11,7 @@ use Yii;
  * @property integer $goods_id
  * @property string $path
  */
-class GoodsPhoto extends \yii\db\ActiveRecord
+class GoodsImg extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc

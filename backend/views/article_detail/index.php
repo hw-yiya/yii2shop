@@ -1,3 +1,4 @@
+<h2>文章详情列表</h2>
 <table class="table">
     <tr>
         <td>id</td>

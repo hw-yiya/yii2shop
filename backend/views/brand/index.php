@@ -1,3 +1,4 @@
+<h2>品牌列表</h2>
 <?php
 echo \yii\bootstrap\Html::a('添加品牌',['brand/add'],['class'=>'btn btn-info']);
 ?>

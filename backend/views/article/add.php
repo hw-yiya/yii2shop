@@ -1,3 +1,4 @@
+<h2>文章添加</h2>
 <?php
 $form = \yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'name')->textInput();

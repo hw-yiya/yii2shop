@@ -1,7 +1,4 @@
-<?php
-echo \yii\bootstrap\Html::a('添加',['admin/add','class'=>'btn btn-info']);
-?>
-
+<h2>管理员添加</h2>
 <?php
 $form = \yii\bootstrap\ActiveForm::begin();
 echo $form->field($model,'username')->textInput();

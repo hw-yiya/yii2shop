@@ -1,3 +1,4 @@
+<h2>文章列表</h2>
 <?php
 echo \yii\bootstrap\Html::a('添加',['article/add'],['class'=>'btn btn-info']);
 ?>

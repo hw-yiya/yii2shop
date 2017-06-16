@@ -1,3 +1,4 @@
+<h2>文章详情</h2>
 <table class="table">
     <tr>
         <th>文章名</th>

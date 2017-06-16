@@ -1,3 +1,4 @@
+<h2>商品详情</h2>
 <table class="table">
     <tr>
         <th>商品名称</th>
