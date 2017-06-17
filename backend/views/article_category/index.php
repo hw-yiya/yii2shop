@@ -23,7 +23,7 @@ echo \yii\bootstrap\Html::a('添加',['article_category/add'],['class'=>'btn btn
             <td>
                 <?php
                 echo \yii\bootstrap\Html::a('编辑',['article_category/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
-                echo \yii\bootstrap\Html::a('编辑',['article_category/del','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
+                echo \yii\bootstrap\Html::a('删除',['article_category/del','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
                 ?>
             </td>
         </tr>
