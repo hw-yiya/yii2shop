@@ -19,7 +19,7 @@ class BrandController extends \yii\web\Controller
         $total = $query->count();
         //每页显示几条
         $page= new Pagination([
-           'totalCount'=>$total,
+            'totalCount'=>$total,
             'defaultPageSize'=>2,
         ]);
         $models = $query->offset($page->offset)->limit($page->limit)->all();
@@ -118,10 +118,6 @@ class BrandController extends \yii\web\Controller
                 'afterValidate' => function (UploadAction $action) {},
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
-//                    $imgUrl = $action->getWebUrl();
-//                    $action->getSavePath();
-//                    $action->output['fileUrl'] = $action->getWebUrl();
-//                    //调用七牛云组件,将图片上传到七牛云
                     $qiniu = \Yii::$app->qiniu;
                     $qiniu->uploadFile($action->getSavePath(),$action->getWebUrl());
 //                    //获取该图片的在七牛云的地址
@@ -132,17 +128,15 @@ class BrandController extends \yii\web\Controller
         ];
     }
     public function actionTest(){
-        $ak = 'E1EhuIzWOns2Y1mEMGgG4KJ5wS8CRZyt1nhdG9tz';
-        $sk = 'FvNQ8tnG07XOQ8SdMZTNxfzuap2kFpDqaBrEyzxv';
-        $domain = 'http://or9qr3rur.bkt.clouddn.com/';
-        $bucket = 'yii2shop';
-        $qiniu = new Qiniu($ak, $sk,$domain, $bucket);
-        //要上传的文件
-        $fileName = \Yii::getAlias('@webroot'.'/upload/test.jpg');
-        $key = 'test.jpg';
-        $re = $qiniu->uploadFile($fileName,$key);
-
-        $url = $qiniu->getLink($key);
-//        var_dump($url);
+        //$imgUrl = $action->getWebUrl();
+        //          $action->output['fileUrl'] = $action->getWebUrl();
+//                    //调用七牛云组件,将图片上传到七牛云
+        $qiniu = \Yii::$app->qiniu;
+        $imgUrl = '/upload/test.jpg';
+        $qiniu->uploadFile(\Yii::getAlias('@webroot').$imgUrl,$imgUrl);
+//                    //获取该图片的在七牛云的地址
+        $url = $qiniu->getLink($imgUrl);
+        //$action->output['fileUrl']=$url;
+        var_dump($url);
     }
 }

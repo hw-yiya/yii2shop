@@ -27,57 +27,8 @@ AppAsset::register($this);
 
 <div class="wrap">
     <?php
-    NavBar::begin([
-        'brandLabel' => '有事请奏，无事退朝',
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    $menuItems = [
-        ['label'=>'首页','url'=>['site/index']],
-        ['label'=>'品牌','url'=>['brand/index']],
-        ['label'=>'文章分类','url'=>['article_category/index']],
-        ['label'=>'文章','url'=>['article/index']],
-        ['label'=>'商品分类','url'=>['goods_category/index']],
-        ['label'=>'商品','url'=>['goods/index']],
-        ['label'=>'管理员','url'=>['admin/index']],
-        [
-            'label' => 'RBAC',
-            'items'=>[
-                [
-                    'label'=>'权限管理',
-                    'url'=>['/rbac/permission-index']
-                ],
-                [
-                    'label'=>'角色管理',
-                    'url'=>['/rbac/role-index']
-                ],
-            ],
-            ],
-        ];
-
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => '登陆', 'url' => ['/admin/login']];
-        $menuItems[] = ['label' => '注册', 'url' => ['/admin/add']];
-    } else {
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/admin/logout'], 'post')
-            . Html::submitButton(
-                '注销 (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
-        $menuItems[] = ['label' => '修改密码', 'url' => ['/admin/pas']];
-
-    }
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
-
-    ]);
-    NavBar::end();
+    //导航
+    echo \backend\widgets\MenuWidget::widget();
     ?>
 
     <div class="container">
@@ -91,7 +42,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; 我确实菜的一笔，你们要相信我啊 <?= date('Y') ?></p>
+        <p class="pull-left">&copy; 欢迎来到京西商城 <?= date('Y') ?></p>
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

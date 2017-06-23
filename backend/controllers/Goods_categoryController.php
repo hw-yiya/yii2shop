@@ -6,7 +6,7 @@ use backend\models\Goods_category;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
-class Goods_categoryController extends \yii\web\Controller
+class Goods_categoryController extends BackendController
 {
     //列表页喊下拉列表
     public function actionIndex()

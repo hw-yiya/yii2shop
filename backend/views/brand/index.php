@@ -19,11 +19,11 @@ echo \yii\bootstrap\Html::a('添加品牌',['brand/add'],['class'=>'btn btn-info
             <td><?=$model->intro?></td>
             <td><img src="<?=$model->logo?>" width="30px" height="30px"></td>
             <td><?=$model->sort?></td>
-            <td><?=\backend\models\Brand::$brandOptions[$model->status]?></td>
+            <td><?=\backend\models\Brand::$brandOption[$model->status]?></td>
             <td>
                 <?php
                     echo \yii\bootstrap\Html::a('编辑',['brand/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']) ;
-                echo \yii\bootstrap\Html::a('删除',['brand/del','id'=>$model->id],['class'=>'btn btn-warning btn-xs']) ;
+                echo \yii\bootstrap\Html::a('删除',['brand/del','id'=>$model->id],['class'=>'btn btn-danger btn-xs']) ;
                 ?>
             </td>
         </tr>

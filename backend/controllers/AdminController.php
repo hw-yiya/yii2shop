@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\components\RbacFilter;
 use backend\models\Admin;
 use backend\models\PasswdForm;
 use backend\models\LoginForm;
@@ -9,6 +10,15 @@ use backend\models\UserForm;
 
 class AdminController extends \yii\web\Controller
 {
+    public function behaviors()
+    {
+        return [
+            'rbac'=>[
+                'class'=>RbacFilter::className(),
+                'only'=>['add','edit','del','rbac'],
+            ]
+        ];
+    }
     //列表页
     public function actionIndex()
     {
@@ -29,7 +39,7 @@ class AdminController extends \yii\web\Controller
                 //var_dump($model->getErrors());exit;
                 //设置提示信息
                 \Yii::$app->session->setFlash('success','添加成功');
-                return $this->redirect(['admin/index']);
+                return $this->redirect(['admin/login']);
             }else{}
             var_dump($model->getErrors());exit;
         }

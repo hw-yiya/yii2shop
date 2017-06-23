@@ -1,50 +1,42 @@
-<h2>商品分类列表</h2>
-<?php
-echo \yii\bootstrap\Html::a('添加',['goods_category/add'],['class'=>'btn btn-info']);
-?>
 <table class="cate table table-bordered table-responsive">
     <tr>
-        <td>ID</td>
-        <td>名称</td>
-        <td>操作</td>
+        <th>ID</th>
+        <th>名称</th>
+        <th>操作</th>
     </tr>
     <?php foreach ($models as $model):?>
         <tr data-lft="<?=$model->lft?>" data-rgt="<?=$model->rgt?>" data-tree="<?=$model->tree?>">
             <td><?=$model->id?></td>
-            <td><?=str_repeat('— ',$model->depth).$model->name?>
-                <span class="down glyphicon glyphicon-hand-down" style="float:right"></span>
-            </td>
-            <td>
-                <?php
-                echo \yii\bootstrap\Html::a('修改',['goods_category/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
-                ?>
-            </td>
+            <td><?=str_repeat('－',$model->depth).$model->name?>
+                <span class="toggle_cate glyphicon glyphicon-chevron-down" style="float: right"></span></td>
+            <td>修改 删除</td>
         </tr>
-    <?php endforeach;?>,.
+    <?php endforeach;?>
 </table>
 <?php
 $js = <<<JS
-    $(".down").click(function(){
-        //查找当前分类的子孙分类
+$(".toggle_cate").click(function(){
+    
         var tr = $(this).closest('tr');
         var tree = parseInt(tr.attr('data-tree'));
         var lft = parseInt(tr.attr('data-lft'));
         var rgt = parseInt(tr.attr('data-rgt'));
-        //显示显示隐藏
-        var show = $(this).hasClass('glyphicon glyphicon-hand-left');
+        //显示还是隐藏 是否显示
+        var show = $(this).hasClass('glyphicon-chevron-up');
         //切换图标
-        $(this).toggleClass('glyphicon glyphicon-hand-down');
-        $(this).toggleClass('glyphicon glyphicon-hand-left');
+        $(this).toggleClass('glyphicon-chevron-up');
+        $(this).toggleClass('glyphicon-chevron-down');
+        
         $(".cate tr").each(function () {
-            //同一棵树 左值大于lft 右值小于rgt
-            console.log($(this).attr('data-tree'));
+            
+            //查找当前分类的子孙分类（根据当前的tree lft rgt）
+            //同一颗树  左值大于lft  右值小于rgt
+            
             if(parseInt($(this).attr('data-tree'))==tree && parseInt($(this).attr('data-lft'))>lft && parseInt($(this).attr('data-rgt'))<rgt){
-            show ?$(this).show():$('this').hide();
+                show?$(this).fadeIn():$(this).fadeOut();
+                
             }
         });
     });
-
-
 JS;
 $this->registerJs($js);
-?>

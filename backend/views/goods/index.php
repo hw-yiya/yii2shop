@@ -47,10 +47,10 @@ echo \yii\bootstrap\Html::submitButton('搜索',['class'=>'btn btn-info']);
         <td><?=date('Y-d-m H:i:s',$model->create_time)?></td>
         <td>
             <?php
-            echo \yii\bootstrap\Html::a('查看',['goods/sel','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
+            echo \yii\bootstrap\Html::a('查看',['goods/sel','id'=>$model->id],['class'=>'btn btn-info btn-xs']);
             echo \yii\bootstrap\Html::a('添加图片',['goodsimg/img','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
             echo \yii\bootstrap\Html::a('编辑',['goods/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
-            echo \yii\bootstrap\Html::a('删除',['goods/del','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
+            echo \yii\bootstrap\Html::a('删除',['goods/del','id'=>$model->id],['class'=>'btn btn-danger btn-xs']);
             ?>
         </td>
     </tr>

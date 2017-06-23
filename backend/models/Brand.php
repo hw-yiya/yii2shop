@@ -19,7 +19,7 @@ class Brand extends \yii\db\ActiveRecord
     public $imgFile;
     public $code;
     //品牌状态
-    static public $brandOptions=[-1=>'删除',0=>'隐藏',1=>'正常'];
+    static public $brandOption=[-1=>'删除',0=>'隐藏',1=>'正常'];
     /**
      * @inheritdoc
      */

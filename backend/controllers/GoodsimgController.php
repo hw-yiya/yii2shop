@@ -9,8 +9,16 @@ use yii\web\NotFoundHttpException;
 
 class GoodsimgController extends Controller{
 
+//    public function actionAdd(){
+//        $model = new GoodsImg();
+//        if($model->load(\Yii::$app->request->post()) && $model->validate()){
+//            $model->save(false);
+//        }
+//    }
+
    public function actionImg($id){
        $goods = Goods::findOne(['id'=>$id]);
+
        if($goods == null){
            throw new NotFoundHttpException('商品不存在');
        }
@@ -66,11 +74,26 @@ class GoodsimgController extends Controller{
                 'beforeSave' => function (UploadAction $action) {},
                 'afterSave' => function (UploadAction $action) {
                     //图片上传成功的同时，将图片和商品关联起来
+
                     $model = new GoodsImg();
+                    $qiniu = \Yii::$app->qiniu;
                     $model->goods_id = \Yii::$app->request->post('goods_id');
-                    $model->path = $action->getWebUrl();
+                    $qiniu->uploadFile($action->getSavePath(),$action->getWebUrl());
+//                    //获取该图片的在七牛云的地址
+                    $url = $qiniu->getLink($action->getWebUrl());
+                    $model->path =$url;
                     $model->save();
-                    $action->output['fileUrl'] = $model->path;
+                    $action->output['fileUrl']=$url;
+
+
+
+
+//                    //调用七牛云组件,将图片上传到七牛云
+//                    $qiniu = \Yii::$app->qiniu;
+//                    $qiniu->uploadFile($action->getSavePath(),$action->getWebUrl());
+////                    //获取该图片的在七牛云的地址
+//                    $url = $qiniu->getLink($action->getWebUrl());
+//                    $action->output['fileUrl']=$url;
                 },
             ],
         ];

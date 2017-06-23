@@ -6,20 +6,12 @@ echo \yii\bootstrap\Html::a('添加',['add-role'],['class'=>'btn btn-info']);
     <tr>
         <td>名称</td>
         <td>描述</td>
-        <td>权限</td>
         <td>编辑</td>
     </tr>
     <?php foreach ($models as $model):?>
     <tr>
         <td><?=$model->name?></td>
         <td><?=$model->description?></td>
-        <td><?php
-                foreach (Yii::$app->authManager->getPermissionsByRole($model->name) as $permission){
-                    echo $permission->description;
-                    echo '&nbsp;';
-                }
-            ?>
-        </td>
         <td>
             <?php
             echo \yii\bootstrap\Html::a('修改',['rbac/edit-role','name'=>$model->name],['class'=>'btn btn-info btn-xs']);

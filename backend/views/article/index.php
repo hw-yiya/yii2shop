@@ -24,9 +24,9 @@ echo \yii\bootstrap\Html::a('添加',['article/add'],['class'=>'btn btn-info']);
             <td><?=date('Y-m-d H:i:s',$model->create_time)?></td>
             <td>
                 <?php
-                echo \yii\bootstrap\Html::a('查看',['article/sel','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
+                echo \yii\bootstrap\Html::a('查看',['article/sel','id'=>$model->id],['class'=>'btn btn-info btn-xs']);
                 echo \yii\bootstrap\Html::a('编辑',['article/edit','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
-                echo \yii\bootstrap\Html::a('删除',['article/del','id'=>$model->id],['class'=>'btn btn-warning btn-xs']);
+                echo \yii\bootstrap\Html::a('删除',['article/del','id'=>$model->id],['class'=>'btn btn-danger btn-xs']);
                 ?>
             </td>
         </tr>

@@ -184,12 +184,12 @@ class GoodsController extends \yii\web\Controller
                 $url = $qiniu->getLink($action->getWebUrl());
                 $action->output['fileUrl']=$url;
 
-                //图片上传成功的同时，将图片和商品关联起来
-                $model = new GoodsPhoto();
-                $model->goods_id = \Yii::$app->request->post('goods_id');
-                $model->path = $action->getWebUrl();
-                $model->save();
-                $action->output['fileUrl'] = $model->path;
+//                //图片上传成功的同时，将图片和商品关联起来
+//                $model = new GoodsPhoto();
+//                $model->goods_id = \Yii::$app->request->post('goods_id');
+//                $model->path = $action->getWebUrl();
+//                $model->save();
+//                $action->output['fileUrl'] = $model->path;
             },
         ],
         'upload'=>[

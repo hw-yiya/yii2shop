@@ -5,7 +5,7 @@ namespace backend\controllers;
 use backend\models\ArticleCategory;
 use yii\data\Pagination;
 
-class Article_categoryController extends \yii\web\Controller
+class Article_categoryController extends BackendController
 {
     //列表
     public function actionIndex()

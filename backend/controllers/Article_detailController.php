@@ -5,7 +5,7 @@ namespace backend\controllers;
 use backend\models\Article;
 use backend\models\Articledetail;
 
-class Article_detailController extends \yii\web\Controller
+class Article_detailController extends BackendController
 {
     //列表页
     public function actionIndex()
