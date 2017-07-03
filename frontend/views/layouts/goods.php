@@ -58,8 +58,8 @@ use common\widgets\Alert;
             <div class="search fl">
                 <div class="search_form">
                     <div class="form_left fl"></div>
-                    <form action="" name="serarch" method="get" class="fl">
-                        <input type="text" class="txt" value="请输入商品关键字" /><input type="submit" class="btn" value="搜索" />
+                    <form action="<?=yii\helpers\Url::to(['goods/search'])?>" name="serarch" method="get" class="fl">
+                        <input type="text" class="txt" value="请输入商品关键字" name="keyword"/><input type="submit" class="btn" value="搜索" />
                     </form>
                     <div class="form_right fl"></div>
                 </div>
@@ -86,11 +86,19 @@ use common\widgets\Alert;
                     </dt>
                     <dd>
                         <div class="prompt">
-                            您好，请<?php if(Yii::$app->user->isGuest){
-                                echo '['.Html::a('登录',['user/login']).'] ['.Html::a('免费注册',['user/regist']).'] ';
-                            }else{
-                                echo Html::a('注销('.Yii::$app->user->identity->username.')',['user/logout']);
-                            }?>
+                            <ul>
+                                <li>您好，欢迎来到京西！<?php if(Yii::$app->user->isGuest){
+                                        echo '['.Html::a('登录',['user/login']).'] ['.Html::a('免费注册',['user/regist']).'] ';
+                                    }else{
+                                        echo Html::a('注销('.Yii::$app->user->identity->username.')',['user/logout']);
+                                        //$menuItems[] = ['label' => '修改密码', 'url' => ['/admin/pas']];
+                                    }?></li>
+                                <li class="line">|</li>
+                                <li>我的订单</li>
+                                <li class="line">|</li>
+                                <li>客户服务</li>
+
+                            </ul>
                         </div>
                         <div class="uclist mt10">
                             <ul class="list1 fl">

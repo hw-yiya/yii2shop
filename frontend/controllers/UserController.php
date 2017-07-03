@@ -1,14 +1,22 @@
 <?php
 namespace frontend\controllers;
 
+use backend\models\Goods;
+use frontend\models\Address;
+use frontend\models\Cart;
 use frontend\models\LoginForm;
 use frontend\models\Member;
+use frontend\models\Order;
+use frontend\models\OrderGoods;
 use frontend\models\PasswdForm;
+use yii\db\Exception;
 use yii\web\Controller;
 use Flc\Alidayu\Client;
 use Flc\Alidayu\App;
 use Flc\Alidayu\Requests\AlibabaAliqinFcSmsNumSend;
 use Flc\Alidayu\Requests\IRequest;
+use yii\web\Cookie;
+use yii\web\NotFoundHttpException;
 
 class UserController extends Controller {
     public $layout = 'login';
@@ -31,6 +39,17 @@ class UserController extends Controller {
         $model = new LoginForm();
         $mod = new Member();
         if($model->load(\Yii::$app->request->post()) && $model->validate()){
+            $cookies = \Yii::$app->request->cookies;
+            $cookie = $cookies->get('cart');
+            if($cookie != null){
+                foreach (unserialize($cookie) as $key=>$cart){
+                    $model = new Cart();
+                    $model->member_id = \Yii::$app->user->id;
+                    $model->goods_id = $key;
+                    $model->amount = $cart;
+                    $model->save(false);
+                }
+            }
             //var_dump($model);exit;
                 \Yii::$app->session->setFlash('success','登录成功');
                 return $this->goBack(['index']);
@@ -112,4 +131,287 @@ class UserController extends Controller {
         var_dump($result);
     }
 
+    //添加到购物车
+    public function actionAddCart()
+    {
+        //接收数据
+        $goods_id = \Yii::$app->request->post('goods_id');
+        $amount = \Yii::$app->request->post('amount');
+        $goods =  Goods::findOne(['id'=>$goods_id]);
+        if($goods == null){
+            throw new NotFoundHttpException('商品不存在');
+        }
+        //实例化
+        $cart = new Cart();
+        //判断是否登录，未登录操作cookie,登录操作数据库
+        if(\Yii::$app->user->isGuest){
+            //先获取cookie中的购物车数据
+            $cookies = \Yii::$app->request->cookies;
+            $cookie = $cookies->get('cart');
+            if($cookie == null){
+                //cookies中没有购物车的数据
+                $cart = [];
+            }else{
+                $cart = unserialize($cookie->value);
+            }
+            //将商品的id和数量存到cookie中
+            $cookies = \Yii::$app->response->cookies;
+            //检查购物车中是否有该商品，有，数量累加
+            if(key_exists($goods->id,$cart)){
+                $cart[$goods_id] += $amount;
+            }else{
+                $cart[$goods_id] = $amount;
+            }
+            //$cart = [$goods_id=>$amount];
+            $cookie = new Cookie([
+                'name'=>'cart','value'=>serialize($cart)
+            ]);
+            $cookies->add($cookie);
+        }else{
+            //已登录，操作数据库
+            //得到登录用户的id
+            $id = \Yii::$app->user->getId();
+            //先获取数据库中的购物车数据
+            $model = Cart::findOne(['member_id'=>$id]);
+            //var_dump($goods_id);exit;
+            if($model==null){
+                //表示数据库还么有该会员的购物车信息，直接新加一条记录
+                $cart->add($goods_id,$amount,$id);
+            }else{
+                //表示数据库中有该会员的购物车信息,然后判断该信息中是否有选中加入的商品，有，就修改记录amount+1
+                if($model2 = Cart::findOne(['goods_id'=>$goods_id,'member_id'=>$id])){
+                    //表示该会员已添加过该商品，只需要修改纪录即可
+                    $model2->amount += $amount;
+                    $model2->save();
+                }else{
+                    //新增
+                    $cart->add($goods_id,$amount,$id);
+                }
+            }
+
+
+        }
+        return $this->redirect(['user/add']);
+    }
+
+    public function actionAdd()
+    {
+        if(\Yii::$app->user->isGuest){
+            //取出cookie中的商品id和数量
+            $cookies = \Yii::$app->request->cookies;
+            $cookie = $cookies->get('cart');
+            if($cookie==null){
+                $cart = [];
+            }else{
+                $cart = unserialize($cookie->value);
+            }
+            $models = [];
+            foreach ($cart as $goods_id => $amount){
+                $goods = Goods::findOne(['id'=>$goods_id])->attributes;
+                $goods['amount'] = $amount;
+                $models[] = $goods;
+            }
+        }else{
+            $id = \Yii::$app->user->getId();
+            $models = [] ;
+            //数据库中获取购物车数据
+            $cart = Cart::find()->select('*')->where(['member_id'=>$id])->asArray()->all();
+//             var_dump($cart);exit;
+            foreach ($cart as $v){
+                $goods = Goods::findOne(['id'=>$v['goods_id']])->attributes;
+                $goods['amount']=$v['amount'];
+                $models[] = $goods;
+
+            }
+        }
+//        var_dump($models,$cart,$cookie);exit;
+        return $this->render('add',['models'=>$models]);
+    }
+
+    public function actionUpdateCart()
+    {
+        //接收数据
+        $goods_id = \Yii::$app->request->post('goods_id');
+        $amount = \Yii::$app->request->post('amount');
+        $goods = Goods::findOne(['id'=>$goods_id]);
+        if($goods == null){
+            throw new NotFoundHttpException('商品不存在');
+        }
+        //判断是否登录，未登录操作cookie,登录操作数据库
+        if(\Yii::$app->user->isGuest){
+            //先获取cookie中的购物车数据
+            $cookies = \Yii::$app->request->cookies;
+            $cookie = $cookies->get('cart');
+            if($cookie == null){
+                //cookies中没有购物车的数据
+                $cart = [];
+            }else{
+                $cart = unserialize($cookie->value);
+            }
+            //将商品的id和数量存到cookie中
+            $cookies = \Yii::$app->response->cookies;
+            //检查购物车中是否有该商品，有，数量累加
+            if(key_exists($goods->id,$cart)){
+                $cart[$goods_id] += $amount;
+            }else{
+                $cart[$goods_id] = $amount;
+            }
+            if($amount){
+                $cart[$goods_id] = $amount;
+            }else{
+                if(key_exists($goods['id'],$cart)){
+                    unset($cart[$goods_id]);
+                }
+            }
+            $cookie = new Cookie([
+                'name'=>'cart','value'=>serialize($cart)
+            ]);
+            $cookies->add($cookie);
+        }else{
+            //已登录，操作数据库
+            $id = \Yii::$app->user->getId();
+            $model = Cart::findOne(['goods_id'=>$goods_id,'member_id'=>$id]);
+            if($amount){
+                $model->amount = $amount;
+                $model->save();
+            }else{
+                //删除数据库中对应的购物车记录
+                $model->delete();
+            }
+
+        }
+        return $this->redirect(['user/cart']);
+    }
+
+
+    //购物车结算
+    public function actionFlow()
+    {
+        if(\Yii::$app->user->isGuest){
+            return $this->redirect(['user/login']);
+        }
+        $id = \Yii::$app->user->getId();
+        //查询出该会员的收货地址信息
+        $address = Address::find()->where(['user_id'=>$id])->all();
+        //var_dump($address);exit;
+        //商品清单
+        $models = [] ;
+        //数据库中获取购物车数据
+        $cart = Cart::find()->select('*')->where(['member_id'=>$id])->asArray()->all();
+        // var_dump($cart);exit;
+        foreach ($cart as $v){
+            $goods = Goods::findOne(['id'=>$v['goods_id']])->attributes;
+            $goods['amount']=$v['amount'];
+            $models[] = $goods;
+
+        }
+        if(\Yii::$app->request->isPost){
+            $order = new Order();
+//            var_dump(\Yii::$app->request->post());exit;
+            $address_id = \Yii::$app->request->post('address_id');
+            //查询收货信息
+            $address_info = Address::find()->where(['id'=>$address_id])->asArray()->all()[0];
+            //var_dump($address_info);exit;
+
+            $order->name = $address_info['name'];
+            $order->add_name = $address_info['add_name'];
+            $order->tel = $address_info['tel'];
+            //查询配送方式
+            $delivery_id = \Yii::$app->request->post('delivery_id');
+            $order->delivery_id = $delivery_id;
+            foreach (Order::$delivery as $v){
+                if(($v['id']) == $delivery_id){
+                    $order->delivery_name = $v['name'];
+                    $order->delivery_price = $v['price'];
+                }
+            }
+            //支付方式
+            $payment_id = \Yii::$app->request->post('payment_id');
+            $order->payment_id = $payment_id;
+            foreach (Order::$payment as $v){
+                if($v['id'] == $payment_id){
+                    $order->payment_name = $v['name'];
+                }
+            }
+            $total_decimal=\Yii::$app->request->post('total_decimal');
+            //总额
+            $order->total_decimal = $total_decimal;
+            //默认状态为待付款
+            $order->status = 1;
+            //创建时间
+            $order->create_time = time();
+            $order->member_id = $id;
+            //事务回滚
+            $trancaction = \Yii::$app->db->beginTransaction();
+            try{
+                $order->save();
+                //提交
+$uid = \Yii::$app->user->id;
+                $carts = Cart::find()->where(['member_id'=>$uid])->all();
+//                die();
+                foreach ($carts as $cart){
+                    $goods = Goods::findOne(['id'=>$cart->goods_id,'status'=>1]);
+                    if($goods==null){
+                        throw  new Exception('商品不存在');
+                    }
+                    //如果需要的数量大于库存
+                    if ($cart->amount > $goods->stock){
+                        throw new Exception('商品的数量不够');
+                    }
+                    $model = new OrderGoods();
+                    $model->goods_id = $cart->goods_id;
+                    $model->goods_name = $cart->goodsinfo->name;
+                    $model->amount = $cart->amount;
+                    $model->logo = $cart->goodsinfo->logo;
+                    $model->price = $cart->goodsinfo->shop_price;
+                    $model->total = $cart->amount*$cart->goodsinfo->shop_price;
+                    $model->order_id = $order->id;
+                    $model->status = $order->status;
+                    $model->save();
+                }
+                $trancaction->commit();
+            }catch (Exception $e){
+                $trancaction->rollBack();
+                //回滚
+            }
+            /**
+             * ---------order-goods 表
+             */
+            //清除购物车
+            if(Cart::deleteAll(['member_id'=>$id])){
+                return $this->redirect('after.html');
+            }
+        }
+        return $this->render('flow',['address'=>$address,'models'=>$models]);
+    }
+
+    public function actionAfter()
+    {
+        return $this->render('after');
+    }
+    public function actionOrderInfo(){
+        $this->layout = 'goods';
+        $models = Order::findAll(['member_id'=>\Yii::$app->user->id]);
+        //var_dump($models);exit;
+        return $this->render('order-info',['models'=>$models]);
+    }
+    public function actionOrderdel($id){
+        $order = OrderGoods::findOne(['id'=>$id]);
+        $model = Order::findOne(['id'=>$order->order_id,]);
+        $model->status = 0;
+        $model->save(false);
+        return $this->redirect(['user/order-info']);
+    }
+
+    //清除超时未付款的订单
+    public function actionClear(){
+        $models = Order::find()->where(['status'=>1])->andWhere(['<','create_time',time()-3600])->all();
+        foreach ($models as $model){
+            $model->status = 0;
+            $model->save();
+            foreach ($model->ordergoods as $good){
+                Goods::updateAllCounters(['stock'=>$good->amount,'id'=>$good->goods_id]);
+            }
+        }
+    }
 }

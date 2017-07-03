@@ -5,7 +5,7 @@ use yii\helpers\Html;
 <div class="list w1210 bc mt10">
     <!-- 面包屑导航 start -->
     <div class="breadcrumb">
-        <h2>当前位置：<?=Html::a('首页',['index/index'])?> > <?=Html::a($categories->name,['goods/list','id'=>$categories->id])?></h2>
+        <h2>当前位置：<?=Html::a('首页',['index/index'])?> </h2>
     </div>
     <!-- 面包屑导航 end -->
 

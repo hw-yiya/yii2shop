@@ -43,7 +43,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username','password','password_hash','status'], 'required'],
+            [['username','password','status'], 'required','on'=>self::SCENARIO_REGISTER],
             ['username', 'unique', 'targetClass' => '\frontend\models\Member', 'message' => '用户名已存在.'],
             [['last_login_time', 'last_login_ip', 'status', 'created_at', 'updated_at'], 'integer'],
             [['username'], 'string', 'max' => 50],
@@ -52,10 +52,11 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
             [['password_hash', 'email'], 'string', 'max' => 100],
             ['tel','match','pattern'=>'/^1[0-9]{10}$/','message'=>'{attribute}必须为1开头的11位纯数字'],
             ['password_hash','compare','compareAttribute'=>'password','message'=>'两次密码不一致'],
-            ['code','captcha'],
+            //['code','captcha'],
             ['email','email'],
             //验证短信验证码
             ['smsCode','validateSms','on'=>self::SCENARIO_REGISTER]
+
         ];
     }
 
@@ -77,7 +78,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
             'created_at' => '添加时间',
             'updated_at' => '修改时间',
             'password'=>'密码',
-            'code'=>'验证码',
+            //'code'=>'验证码',
             'smsCode'=>'短信验证'
         ];
     }

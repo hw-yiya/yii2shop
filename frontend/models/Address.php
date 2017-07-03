@@ -35,7 +35,7 @@ class Address extends \yii\db\ActiveRecord
     {
         return [
             [['tel', 'is_default'], 'integer'],
-            [['tel','province','city','district',], 'required'],
+//            [['tel','province','city','district',], 'required'],
             [['name'], 'string', 'max' => 30],
             [['add_detail'],'safe'],
         ];

@@ -2,8 +2,10 @@
 namespace frontend\models;
 
 use yii\base\Model;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
-class PasswdForm extends Model{
+class PasswdForm extends ActiveRecord implements IdentityInterface {
     public $oldPassword;//旧密码
     public $newPassword;//新密码
     public $rePassword;//确认新密码

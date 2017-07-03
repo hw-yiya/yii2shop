@@ -145,10 +145,10 @@ use yii\helpers\Html;
                     <li><span>商品编号： </span><?=$goods->sn?></li>
                     <li class="market_price"><span>定价：</span><em>￥<?=$goods->market_price?></em></li>
                     <li class="shop_price"><span>本店价：</span> <strong>￥<?=$goods->shop_price?></strong> <a href="">(降价通知)</a></li>
-                    <li><span>上架时间：</span><?=date('Y-m-d H:i:s',$goods->create_time)?></li>
+                    <li><span>上架时间：</span><?=date('Y-m-d',$goods->create_time)?></li>
                     <li class="star"><span>商品评分：</span> <strong></strong><a href="">(已有21人评价)</a></li> <!-- 此处的星级切换css即可 默认为5星 star4 表示4星 star3 表示3星 star2表示2星 star1表示1星 -->
                 </ul>
-                <form action="" method="post" class="choose">
+                <form action="<?=\yii\helpers\Url::to(['user/add-cart'])?>" method="post" class="choose">
                     <ul>
 
                         <li>
@@ -167,6 +167,8 @@ use yii\helpers\Html;
                                 <dt>&nbsp;</dt>
                                 <dd>
                                     <input type="submit" value="" class="add_btn" />
+                                    <input type="hidden" name="goods_id" value="<?=$goods->id?>">
+                                    <input name="_csrf-frontend" type="hidden" id="_csrf-frontend" value="<?= Yii::$app->request->csrfToken ?>">
                                 </dd>
                             </dl>
                         </li>

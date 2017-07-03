@@ -11,7 +11,9 @@ class GoodsAsset extends AssetBundle
         'style/base.css',
         'style/global.css',
         'style/header.css',
+        'style/home.css',
         'style/list.css',
+        'style/order.css',
         'style/common.css',
         'style/bottomnav.css',
         'style/footer.css',
@@ -25,6 +27,7 @@ class GoodsAsset extends AssetBundle
         'js/list.js',
         'js/home.js',
         'js/goods.js',
+        'js/jquery-1.8.3.min.js',
     ];
     public $depends = [
         'yii\web\JqueryAsset'

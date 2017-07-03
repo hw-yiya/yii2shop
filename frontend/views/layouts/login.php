@@ -30,7 +30,12 @@ use common\widgets\Alert;
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+                <li>您好，欢迎来到京西！<?php if(Yii::$app->user->isGuest){
+                        echo '['.Html::a('登录',['user/login']).'] ['.Html::a('免费注册',['user/regist']).'] ';
+                    }else{
+                        echo Html::a('注销('.Yii::$app->user->identity->username.')',['user/logout']);
+                        //$menuItems[] = ['label' => '修改密码', 'url' => ['/admin/pas']];
+                    }?></li>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
